@@ -1,0 +1,20 @@
+{
+  "name": "vue-module-acl",
+  "version": "1.0.2",
+  "description": "permission, module, acl, vue, role, rule",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:NatCOOPJS/vue-module-acl.git"
+  },
+  "keywords": [
+    "permission",
+    "module",
+    "acl",
+    "vue",
+    "role",
+    "rule"
+  ],
+  "author": "NatCoop",
+  "license": "MIT"
+}
