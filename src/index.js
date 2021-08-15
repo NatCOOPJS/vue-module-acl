@@ -21,7 +21,7 @@ const Acl = function () {
     }, {
         key: 'check',
         value: function check(moduleName, action) {
-            let _action = 'show';
+            let _action = 'read';
             if (action) _action = action
             const _permission = moduleName + "." + _action;
             if (this.permission.indexOf(_permission) !== -1) {
@@ -36,20 +36,18 @@ const Acl = function () {
             router.beforeEach(function (to, from, next) {
                 if (typeof to.meta.permission !== 'undefined') {
                     if (typeof to.meta.permission.module === 'undefined')
-                        return next(this.fail);
+                        return next(_this.fail);
                     else {
                         if (!_this.check(to.meta.permission.module)) {
                             if (to.meta.permission.fail) {
                                 return next(to.meta.permission.fail);
                             } else {
-                                return next(this.fail);
+                                return next(_this.fail);
                             }
                         }
-                        next();
                     }
-                } else {
-                    next();
                 }
+                return next();
 
             });
         }
@@ -82,7 +80,27 @@ Acl.install = function (Vue, _ref) {
     Vue.directive('can', directiveHandler)
 };
 
-const directiveHandler = function (el, binding) {
+function hiddenNode(el, vnode) {
+    const comment = document.createComment(' ');
+    Object.defineProperty(comment, 'setAttribute', {
+        value: () => undefined,
+    });
+    vnode.text = ' ';
+    vnode.elm = comment;
+    vnode.isComment = true;
+    vnode.tag = undefined;
+    vnode.data = vnode.data || {};
+    vnode.data.directives = undefined;
+    if (vnode.componentInstance) {
+        vnode.componentInstance.$el = comment;
+    }
+    if (el.parentNode) {
+        el.parentNode.replaceChild(comment, el);
+    }
+}
+
+
+const directiveHandler = function (el, binding,vnode) {
     let moduleName = null
     let action = null
     let style = null
@@ -100,6 +118,9 @@ const directiveHandler = function (el, binding) {
     _el.readOnly = false;
     if (!canShow) {
         if (style === 'hidden') {
+            hiddenNode(el, vnode)            
+        }
+        else if (style === 'visibility') {
             _el.style.visibility = 'hidden';
         }
         else if (style === 'disable') {
