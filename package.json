@@ -1,6 +1,6 @@
 {
   "name": "vue-module-acl",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "permission, module, acl, vue, role, rule",
   "main": "src/index.js",
   "repository": {
